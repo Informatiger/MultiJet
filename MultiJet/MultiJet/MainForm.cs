@@ -18,7 +18,6 @@ namespace MultiJet
     struct MESSAGE_TYPE
     {
         public const string TEXT = "TEXT";
-
         public const string URL = "URL";
     }
 
@@ -61,7 +60,6 @@ namespace MultiJet
                     item.Tag = "INFO";
                     break;
                 case "!DBG:":
-                    var dbgArray = new String[3];
                     Array[0] = "DEBUG";
                     Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5));
                     Array[2] = DateTime.Now.ToShortTimeString();
@@ -70,7 +68,6 @@ namespace MultiJet
                     item.Tag = "DEBUG";
                     break;
                 case "!ERR:":
-                    var errArrayArray = new String[3];
                     Array[0] = "ERROR";
                     Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5));
                     Array[2] = DateTime.Now.ToShortTimeString();
@@ -146,7 +143,6 @@ namespace MultiJet
                 messageBuilder.Clear();
             }
         }
-
 
         private void btnSendMessage_Click(object sender, EventArgs e)
         {
