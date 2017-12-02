@@ -1,5 +1,5 @@
 # MultiJet
-MultiJet is Simple Chat (for JetServer)
+MultiJet is Simple Chat (for [JetServer](https://github.com/Nikoshi/JetServer))
 
 #### Used libraries:
 * [MetroModernUI](https://github.com/dennismagno/metroframework-modern-ui)
