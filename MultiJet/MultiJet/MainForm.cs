@@ -360,6 +360,7 @@ namespace MultiJet
                 if (tbMessage.Text == tbMessage.PlaceHolderText)
                     tbMessage.Text = String.Empty;
                 tbMessage.Text += cbEmoji.SelectedItem.ToString();
+                tbMessage.Focus();
             }
         }
 
