@@ -314,7 +314,7 @@ namespace MultiJet
                     var url = lvMessages.SelectedItems[0].SubItems[1].Text;
 
                     if (MessageBox.Show("Open " + url + "?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        Process.Start(url);
+                        Process.Start("explorer.exe", url);
                 }
                 else if (lvMessages.SelectedItems[0].Tag.Equals("TEXT"))
                 {
