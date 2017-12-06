@@ -44,55 +44,61 @@ namespace MultiJet
 
         private void Client_DataReceived(object sender, SimpleTCP.Message e)
         {
-            var msg = ReplaceNonPrintableCharacters(e.MessageString);
-            var cmd = msg.Substring(0, 5);
-
-            var Array = new String[3];
-            ListViewItem item;
-            switch (cmd)
+            foreach (var thisMessage in e.MessageString.Trim().Split('\u0013'))
             {
-                case "!INF:":
-                    Array[0] = "INFO";
-                    Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5));
-                    Array[2] = DateTime.Now.ToShortTimeString();
+                var msg = ReplaceNonPrintableCharacters(thisMessage);
+                if (String.IsNullOrEmpty(msg)) return;
 
-                    item = new ListViewItem(Array);
-                    item.Tag = "INFO";
-                    break;
-                case "!DBG:":
-                    Array[0] = "DEBUG";
-                    Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5));
-                    Array[2] = DateTime.Now.ToShortTimeString();
+                var cmd = msg.Substring(0, 5);
 
-                    item = new ListViewItem(Array);
-                    item.Tag = "DEBUG";
-                    break;
-                case "!ERR:":
-                    Array[0] = "ERROR";
-                    Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5));
-                    Array[2] = DateTime.Now.ToShortTimeString();
+                var Array = new String[3];
+                ListViewItem item;
+                switch (cmd)
+                {
+                    case "!INF:":
+                        Array[0] = "INFO";
+                        Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5).Trim());
+                        Array[2] = DateTime.Now.ToShortTimeString();
 
-                    item = new ListViewItem(Array);
-                    item.Tag = "ERROR";
-                    break;
-                default:
-                    int firstColon = msg.IndexOf(':');
-                    var message = msg.Substring(firstColon +1);
+                        item = new ListViewItem(Array);
+                        item.Tag = "INFO";
+                        break;
+                    case "!DBG:":
+                        Array[0] = "DEBUG";
+                        Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5).Trim());
+                        Array[2] = DateTime.Now.ToShortTimeString();
 
-                    Array[0] = msg.Substring(0, firstColon);
-                    Array[1] = ReplaceNonPrintableCharacters(message);
-                    Array[2] = DateTime.Now.ToShortTimeString();
+                        item = new ListViewItem(Array);
+                        item.Tag = "DEBUG";
+                        break;
+                    case "!ERR:":
+                        Array[0] = "ERROR";
+                        Array[1] = ReplaceNonPrintableCharacters(msg.Substring(5).Trim());
+                        Array[2] = DateTime.Now.ToShortTimeString();
 
-                    item = new ListViewItem(Array);
-                    if (IsUrlValid(message))
-                        item.Tag = MESSAGE_TYPE.URL;
-                    else
-                        item.Tag = MESSAGE_TYPE.TEXT;
-                    if (WindowState == FormWindowState.Minimized)
-                        Notify(message);
-                    break;
+                        item = new ListViewItem(Array);
+                        item.Tag = "ERROR";
+                        break;
+                    default:
+                        int firstColon = msg.IndexOf(':');
+                        var message = msg.Substring(firstColon + 1);
+
+                        Array[0] = msg.Substring(0, firstColon);
+                        Array[1] = ReplaceNonPrintableCharacters(message.Trim());
+                        Array[2] = DateTime.Now.ToShortTimeString();
+
+                        item = new ListViewItem(Array);
+                        if (IsUrlValid(message))
+                            item.Tag = MESSAGE_TYPE.URL;
+                        else
+                            item.Tag = MESSAGE_TYPE.TEXT;
+                        if (!Visible || this.WindowState.Equals(FormWindowState.Minimized))
+                            Notify(message);
+                        break;
+                }
+                AddItem(item);
             }
-            AddItem(item);
+            
         }
 
         private void tbUsername_Enter(object sender, EventArgs e)
@@ -139,7 +145,7 @@ namespace MultiJet
                 {
                     messageBuilder.AppendLine(msg);
                 }
-                SendTextMessage(messageBuilder.ToString());
+                SendTextMessage(messageBuilder.ToString().Trim());
                 messageBuilder.Clear();
             }
         }
@@ -262,7 +268,7 @@ namespace MultiJet
         /// <returns>URL valid?</returns>
         private bool IsUrlValid(string url)
         {
-            string pattern = @"^(file|http|https|ftp|)\://|[a-zA-Z0-9\-\.]+\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$";
+            string pattern = @"^(http|https|file|ftp|)\://|[a-zA-Z0-9\-\.]+\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$";
             Regex reg = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return reg.IsMatch(url);
         }
@@ -332,7 +338,6 @@ namespace MultiJet
         {
             if (!ReallyClose)
             {
-                WindowState = FormWindowState.Minimized;
                 Hide();
                 e.Cancel = true;
             }
@@ -346,9 +351,8 @@ namespace MultiJet
 
         private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized)
+            if (!Visible)
             {
-                WindowState = FormWindowState.Normal;
                 Show();
             }
         }
@@ -368,10 +372,9 @@ namespace MultiJet
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (WindowState == FormWindowState.Minimized)
+                if (!Visible)
                 {
                     Show();
-                    WindowState = FormWindowState.Normal;
                 }
             }
         }
