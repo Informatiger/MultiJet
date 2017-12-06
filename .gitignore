@@ -3,3 +3,7 @@
 ################################################################################
 
 /MultiJet/MultiJet/bin/Debug
+/MultiJet/MultiJet/obj/Debug
+/MultiJet/.vs/MultiJet/v14
+/MultiJet/MultiJet/bin/Release
+/MultiJet/MultiJet/obj/Release

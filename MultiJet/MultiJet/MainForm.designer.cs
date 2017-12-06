@@ -329,7 +329,7 @@
             this.tbMessage.Lines = new string[0];
             this.tbMessage.Location = new System.Drawing.Point(99, 366);
             this.tbMessage.Margin = new System.Windows.Forms.Padding(4);
-            this.tbMessage.MaxLength = 32767;
+            this.tbMessage.MaxLength = 1024;
             this.tbMessage.Name = "tbMessage";
             this.tbMessage.PasswordChar = '\0';
             this.tbMessage.PlaceHolderText = "Enter to Send";
