@@ -1,3 +1,8 @@
+# This repo is archived
+## See the new repo at https://gitlab.com/informatiger/MultiJet
+
+---
+
 # MultiJet
 MultiJet is Simple Chat (for [JetServer](https://github.com/Informatiger/JetServer))
 
